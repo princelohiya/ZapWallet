@@ -38,7 +38,7 @@ your-project/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/princelohiya/your-repo-name.git
+git clone https://github.com/princelohiya/ZapWallet.git
 cd your-repo-name
 ```
 

@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { Axios } from "axios";
+import {Users} from "../components/Users";
 
 
 export const PaymentPage = (props) => {
@@ -8,8 +9,6 @@ export const PaymentPage = (props) => {
     const [searchParams] = useSearchParams();
     const amount = searchParams.get("amount");
     const name = searchParams.get("name");
-    const [status, setStatus] = useState(searchParams.get("status"));
-    const balance = searchParams.get("balance");
 
 return(
     <div>
@@ -45,6 +44,7 @@ return(
                             <p className="text-sm pl-2">Your payment has been successfully processed. It might take few minutes to reflect changes</p>
                         </div>  
                     </div>
+                {/* <Users /> */}
                 </div>
             </div>
         </div>

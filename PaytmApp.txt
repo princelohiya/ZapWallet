@@ -1,0 +1,13 @@
+Bugs
+ 
+
+
+
+Features to Add
+
+add loader while doing payment or on all pages
+fix : on paymentpage balance changes after a reload
+conditional rendering for payment success/fail -> use two diff paymentPage 1. PaymentDone 2. PaymentFail
+good looking logo 
+
+

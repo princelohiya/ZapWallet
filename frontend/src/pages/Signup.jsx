@@ -15,7 +15,7 @@ export const Signup = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-slate-300 h-screen flex justify-center">
+    <div className="bg-slate-200 h-screen flex justify-center">
       <div className="flex flex-col justify-center">
         <div className="rounded-lg bg-white w-80 text-center p-2 h-max px-4">
           <Heading label={"Sign up"} />
@@ -51,6 +51,7 @@ export const Signup = () => {
           <div className="pt-4">
             <Button
               onClick={async () => {
+                try{
                 const response = await axios.post(
                   "http://localhost:3000/user/signup",
                   {
@@ -60,9 +61,19 @@ export const Signup = () => {
                     password,
                   }
                 );
-                localStorage.setItem("token", response.data.token);
-                navigate("/dashboard");
-              }}
+                if (response.status === 200) {
+                  alert("User created successfully");
+                  localStorage.setItem("token", response.data.token);
+                  navigate("/dashboard");
+                }
+              }
+                catch (error) {
+                console.error("Error signing up:", error);
+                alert("Something went wrong during signup");
+
+              }
+            }
+          }
               label={"Sign up"}
             />
           </div>

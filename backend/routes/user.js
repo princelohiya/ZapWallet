@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET = require("../config");
 
 const signupBody = zod.object({
-  username: zod.string().email(),
+  username: zod.string().email(), 
   firstName: zod.string(),
   lastName: zod.string(),
   password: zod.string(),
@@ -93,10 +93,12 @@ router.post("/signin", async (req, res) => {
     });
     return;
   }
-
-  res.status(411).json({
+  else{
+    res.status(411).json({
     message: "Error while logging in",
   });
+  }
+
 });
 
 // 3. update

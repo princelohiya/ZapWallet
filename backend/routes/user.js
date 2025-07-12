@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET = require("../config");
 
 const signupBody = zod.object({
-  username: zod.string().email(), 
+  username: zod.string().email(),
   firstName: zod.string(),
   lastName: zod.string(),
   password: zod.string(),
@@ -51,7 +51,7 @@ router.post("/signup", async (req, res) => {
   );
 
   await Account.create({
-    userId : userId,
+    userId: userId,
     balance: 1 + Math.random() * 10000,
   });
 
@@ -92,13 +92,11 @@ router.post("/signin", async (req, res) => {
       token: token,
     });
     return;
-  }
-  else{
+  } else {
     res.status(411).json({
-    message: "Error while logging in",
-  });
+      message: "Error while logging in",
+    });
   }
-
 });
 
 // 3. update
@@ -133,6 +131,7 @@ router.get("/bulk", authMiddleware, async (req, res) => {
 
   const users = await User.find({
     $or: [{ firstName: { $regex: filter } }, { lastName: { $regex: filter } }],
+    _id: { $ne: req.userId },
   });
 
   res.json({
@@ -146,7 +145,6 @@ router.get("/bulk", authMiddleware, async (req, res) => {
 });
 
 router.get("/me", async (req, res) => {
-
   const user = await User.findOne({ _id: req.query._id });
   const account = await Account.findOne({ userId: req.query._id });
 

@@ -12,12 +12,16 @@ export const Send = (props) => {
   return (
     <div className="flex justify-center h-screen bg-gray-100">
       <div className="h-full flex flex-col justify-center">
-        <div className="border h-min text-card-foreground max-w-md p-4 space-y-8 w-96 bg-white shadow-lg rounded-lg">
-          <div className="flex flex-col p-6">
-            <h2 className="text-3xl font-bold text-center">Send Money</h2>
+        <div className="border h-min text-card-foreground max-w-md p-4 space-y-2 w-96 bg-white shadow-lg has-focus-visible:border-orange-400 ">
+          <div name="logo" className="flex justify-center h-42 w-full">
+            <img src="/logo.png" alt="" />
           </div>
-          <div className=" flex justify-center text-lg font-medium">
-            Balance : Rs. {Math.floor(props.balance * 100) / 100}
+
+          <div className="flex flex-col p-3">
+            <h2 className="text-3xl font-bold text-center pb-4">Send Money</h2>
+            <div className=" flex justify-center text-lg font-medium">
+              Balance : Rs. {Math.floor(props.balance * 100) / 100}
+            </div>
           </div>
           <div className="p-5">
             <div className="flex items-center space-x-3 pb-2">
@@ -62,6 +66,9 @@ export const Send = (props) => {
                     }
                   );
                   if (response.status === 200) {
+                    // re-fetch balance
+                    // props.setBalance((prev) => prev - amount);
+                    await props.fetchUser();
                     navigate("/paymentPage?amount=" + amount + "&name=" + name);
                   } else {
                     alert("Transfer failed");

@@ -16,28 +16,28 @@ function App() {
   const [name, setName] = useState("Loading...");
   const [balance, setBalance] = useState("Loading...");
 
+  const fetchUser = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const decoded = jwtDecode(token);
+      const userId = decoded.userId; // depends on what you stored in token
+
+      const response = await axios.get(
+        "http://localhost:3000/user/me?_id=" + userId
+      );
+
+      const user = response.data.user;
+      setName(`${user.firstName} ${user.lastName}`);
+      setBalance(Math.floor(user.balance * 100) / 100);
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+      setName("Unknown User");
+    }
+  };
+
   useEffect(() => {
-    const fetchUser = async () => {
-      const token = localStorage.getItem("token");
-      try {
-        const decoded = jwtDecode(token);
-        const userId = decoded.userId; // depends on what you stored in token
-
-        const response = await axios.get(
-          "http://localhost:3000/user/me?_id=" + userId
-        );
-
-        const user = response.data.user;
-        setName(`${user.firstName} ${user.lastName}`);
-        setBalance(user.balance);
-      } catch (err) {
-        console.error("Error fetching user data:", err);
-        setName("Unknown User");
-      }
-    };
-
     fetchUser();
-  }, [balance]);
+  }, []);
 
   return (
     <div>
@@ -52,11 +52,18 @@ function App() {
           ></Route>
           <Route
             path="/send"
-            element={<Send name={name} balance={balance} />}
+            element={
+              <Send
+                name={name}
+                balance={balance}
+                setBalance={setBalance}
+                fetchUser={fetchUser}
+              />
+            }
           ></Route>
           <Route
             path="/paymentPage"
-            element={<PaymentPage name={name} balance={balance} />}
+            element={<PaymentPage name={name} balance={balance} s />}
           ></Route>
         </Routes>
       </BrowserRouter>

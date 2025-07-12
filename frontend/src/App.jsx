@@ -13,42 +13,51 @@ import axios from "axios";
 // npm install axios
 
 function App() {
-
   const [name, setName] = useState("Loading...");
-   const [balance, setBalance] = useState("Loading...");
-  
-    useEffect(() => {
-      const fetchUser = async () => {
-        const token = localStorage.getItem("token");
-        try {
-          const decoded = jwtDecode(token);
-          const userId = decoded.userId; // depends on what you stored in token
-  
-          const response = await axios.get("http://localhost:3000/user/me?_id=" + userId);
-  
-          const user = response.data.user;
-          setName(`${user.firstName} ${user.lastName}`);
-          setBalance(user.balance);
-        } catch (err) {
-          console.error("Error fetching user data:", err);
-          setName("Unknown User");
-        }
-      };
-  
-      fetchUser();
-    }, [balance]);
-  
+  const [balance, setBalance] = useState("Loading...");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const decoded = jwtDecode(token);
+        const userId = decoded.userId; // depends on what you stored in token
+
+        const response = await axios.get(
+          "http://localhost:3000/user/me?_id=" + userId
+        );
+
+        const user = response.data.user;
+        setName(`${user.firstName} ${user.lastName}`);
+        setBalance(user.balance);
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+        setName("Unknown User");
+      }
+    };
+
+    fetchUser();
+  }, [balance]);
 
   return (
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Signup />}></Route>
+          <Route path="/" element={<Signin />}></Route>
           <Route path="/signup" element={<Signup />}></Route>
           <Route path="/signin" element={<Signin />}></Route>
-          <Route path="/dashboard" element={<Dashboard name = {name} balance = {balance} />} ></Route>
-          <Route path="/send" element={<Send name = {name} balance = {balance} />}></Route>
-          <Route path="/paymentPage" element={<PaymentPage name = {name} balance = {balance}/>}></Route>
+          <Route
+            path="/dashboard"
+            element={<Dashboard name={name} balance={balance} />}
+          ></Route>
+          <Route
+            path="/send"
+            element={<Send name={name} balance={balance} />}
+          ></Route>
+          <Route
+            path="/paymentPage"
+            element={<PaymentPage name={name} balance={balance} />}
+          ></Route>
         </Routes>
       </BrowserRouter>
     </div>

@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { Button } from "./Button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Skeleton from "react-loading-skeleton";
 
 export const Users = () => {
   // Replace with backend call
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
@@ -30,7 +32,7 @@ export const Users = () => {
           }}
           type="text"
           placeholder="Search users..."
-          className="w-full px-2 py-1 border rounded border-slate-200"
+          className="w-full px-2 py-1 border rounded border-slate-300 hover:border-slate-400 focus:outline-none focus:ring-1 focus:ring-orange-500"
         ></input>
       </div>
       <div>

@@ -23,7 +23,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
   const session = await mongoose.startSession();
 
   session.startTransaction();
-  
+
   const { amount, to } = req.body;
 
   // Fetch the accounts within the transaction
@@ -33,7 +33,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
 
   if (!account) {
     await session.abortTransaction();
-    return res.status(400).json({
+    return res.status(404).json({
       message: "account not found/ invalid account",
     });
   }
@@ -49,7 +49,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
 
   if (!toAccount) {
     await session.abortTransaction();
-    return res.status(400).json({
+    return res.status(404).json({
       message: "Invalid account",
     });
   }

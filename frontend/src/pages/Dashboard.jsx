@@ -4,12 +4,14 @@ import { Balance } from "../components/Balance";
 import { Users } from "../components/Users";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { set } from "mongoose";
 import Skeleton from "react-loading-skeleton";
 import { Loader } from "../components/LoaderComponent";
 
 export const Dashboard = (props) => {
+  const navigate = useNavigate();
+
   return (
     <div>
       <Appbar name={props.name} />

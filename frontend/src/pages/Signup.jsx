@@ -45,35 +45,32 @@ export const Signup = () => {
             onChange={(e) => {
               setPassword(e.target.value);
             }}
+            type="password"
             placeholder="123456"
             label={"Password"}
           />
           <div className="pt-4">
             <Button
               onClick={async () => {
-                try{
-                const response = await axios.post(
-                  "http://localhost:3000/user/signup",
-                  {
-                    username,
-                    firstName,
-                    lastName,
-                    password,
+                try {
+                  const response = await axios.post(
+                    "http://localhost:3000/user/signup",
+                    {
+                      username,
+                      firstName,
+                      lastName,
+                      password,
+                    }
+                  );
+                  if (response.status === 200) {
+                    localStorage.setItem("token", response.data.token);
+                    navigate("/dashboard");
                   }
-                );
-                if (response.status === 200) {
-                  alert("User created successfully");
-                  localStorage.setItem("token", response.data.token);
-                  navigate("/dashboard");
+                } catch (error) {
+                  console.error("Error signing up:", error);
+                  alert("Something went wrong during signup");
                 }
-              }
-                catch (error) {
-                console.error("Error signing up:", error);
-                alert("Something went wrong during signup");
-
-              }
-            }
-          }
+              }}
               label={"Sign up"}
             />
           </div>

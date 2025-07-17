@@ -17,7 +17,7 @@ export const Appbar = (props) => {
           <img src="/logo.png" alt="" />{" "}
         </button>
       </div>
-      <div className="hidden sm:flex flex-col justify-center text-slate-600">
+      <div className="hidden sm:flex flex-col justify-center text-slate-600 text-lg font-semibold">
         <button
           className="cursor-pointer"
           onClick={() => {
@@ -28,33 +28,33 @@ export const Appbar = (props) => {
         </button>
       </div>
 
-      <div className="flex flex-col justify-center text-slate-600 ">
+      <div className="flex flex-col justify-center text-slate-600 text-lg font-semibold">
         <button
           className="cursor-pointer"
           onClick={() => {
-            navigate("/Users");
+            navigate("/Userspage");
           }}
         >
           Send money
         </button>
       </div>
 
-      <div className="hidden sm:flex flex-col justify-center text-slate-600 ">
+      <div className="hidden sm:flex flex-col justify-center text-slate-600 text-lg font-semibold">
         <button
           className="cursor-pointer"
           onClick={() => {
-            navigate("/Users");
+            navigate("/Userspage");
           }}
         >
           User Profile
         </button>
       </div>
 
-      <div className="hidden sm:flex flex-col justify-center  text-slate-600">
+      <div className="hidden md:flex flex-col justify-center  text-slate-600 text-lg font-semibold">
         <button
           className="cursor-pointer"
           onClick={() => {
-            navigate("/dashboard");
+            navigate("/Aboutus");
           }}
         >
           About us
@@ -76,7 +76,7 @@ export const Appbar = (props) => {
             </button>
           </div>
         </div>
-        <div className="rounded-full h-12 w-12 bg-slate-200 flex justify-center mt-1 mr-2">
+        <div className="hidden sm:flex flex justify-center rounded-full h-12 w-12 bg-slate-200  mt-1 mr-2">
           <div className="flex flex-col justify-center h-full text-xl text-orange-500">
             {name[0].toUpperCase()}
           </div>

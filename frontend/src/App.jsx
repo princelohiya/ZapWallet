@@ -9,7 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { Users } from "./components/Users";
+import { Userspage } from "./pages/Userspage";
+import { Aboutus } from "./pages/Aboutus";
 
 // npm install jwt-decode
 // npm install axios
@@ -72,9 +73,16 @@ function App() {
           ></Route>
           <Route
             path="/paymentPage"
-            element={<PaymentPage name={name} balance={balance} s />}
+            element={<PaymentPage name={name} balance={balance} />}
           ></Route>
-          <Route path="/users" element={<Users name={name}></Users>}></Route>
+          <Route
+            path="/userspage"
+            element={<Userspage name={name}></Userspage>}
+          ></Route>
+          <Route
+            path="/Aboutus"
+            element={<Aboutus name={name}></Aboutus>}
+          ></Route>
         </Routes>
       </BrowserRouter>
     </div>

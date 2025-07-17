@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BottomWarning } from "../components/BottomWarning";
 import { Button } from "../components/Button";
 import { Heading } from "../components/Heading";
@@ -7,12 +7,19 @@ import { SubHeading } from "../components/SubHeading";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export const Signup = ({ fetchUser }) => {
+export const Signup = (props) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, []);
 
   return (
     <div className="bg-slate-200 h-screen flex justify-center">
@@ -69,6 +76,7 @@ export const Signup = ({ fetchUser }) => {
                   }
                 } catch (error) {
                   console.error("Error signing up:", error);
+                  // console.log("Backend response  : " )
                   alert("Something went wrong during signup");
                 }
               }}

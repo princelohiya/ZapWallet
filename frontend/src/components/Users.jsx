@@ -24,7 +24,7 @@ export const Users = () => {
 
   return (
     <>
-      <div className="font-bold mt-6  ">Users</div>
+      <div className="font-bold mt-6 text-3xl ">Users</div>
       <div className="my-2">
         <input
           onChange={(e) => {

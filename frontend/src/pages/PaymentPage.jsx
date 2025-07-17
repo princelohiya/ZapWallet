@@ -52,10 +52,10 @@ export const PaymentPage = (props) => {
             </div>
             <div className="p-6">
               <div className="space-y-4">
-                <h3 className=" text-2xl font-bold pb-0 p-10">
+                <h3 className=" text-2xl font-bold text-center ">
                   Payment Successful
                 </h3>
-                <div className=" flex flex-col justify-center h-ful pl-5">
+                <div className=" flex flex-col justify-center h-ful pl-10 ">
                   <h6 className="  font-semibold pl-10">
                     {" "}
                     Amount Paid : Rs. {amount}{" "}
@@ -66,10 +66,12 @@ export const PaymentPage = (props) => {
                     Balance : {props.balance}{" "}
                   </h6>
                 </div>
-                <p className="text-sm pl-2">
-                  Your payment has been successfully processed. It might take
-                  few minutes to reflect changes
-                </p>
+                <div className="flex justify-center">
+                  <p className="text-sm pl-2">
+                    Your payment has been successfully processed. It might take
+                    few minutes to reflect changes
+                  </p>
+                </div>
               </div>
             </div>
             {/* <Users /> */}

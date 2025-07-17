@@ -7,7 +7,7 @@ import { SubHeading } from "../components/SubHeading";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export const Signup = () => {
+export const Signup = ({ fetchUser }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
@@ -64,6 +64,7 @@ export const Signup = () => {
                   );
                   if (response.status === 200) {
                     localStorage.setItem("token", response.data.token);
+                    await props.fetchUser();
                     navigate("/dashboard");
                   }
                 } catch (error) {

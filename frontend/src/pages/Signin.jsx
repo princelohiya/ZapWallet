@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export const Signin = () => {
+export const Signin = (props) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -50,6 +50,7 @@ export const Signin = () => {
                     alert("Invalid credentials");
                   });
                 localStorage.setItem("token", response.data.token);
+                await props.fetchUser();
                 navigate("/dashboard");
               }}
             />

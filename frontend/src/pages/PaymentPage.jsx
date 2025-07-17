@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { Axios } from "axios";
 import { Users } from "../components/Users";
+import { Appbar } from "../components/Appbar";
 
 export const PaymentPage = (props) => {
   const [searchParams] = useSearchParams();
@@ -10,7 +11,8 @@ export const PaymentPage = (props) => {
 
   return (
     <div>
-      <div className="flex justify-center h-screen bg-gray-100">
+      <Appbar name={props.name}></Appbar>
+      <div className="flex justify-center h-screen pt-7 bg-gray-100">
         <div className="h-full flex flex-col justify-center ">
           <div className="border h-min text-card-foreground max-w-md p-4 space-y-8 w-96 bg-white shadow-lg rounded-lg">
             <div className="flex flex-col space-y-1.5 p-6">

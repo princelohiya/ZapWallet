@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { nativeEnum } from "zod";
+import { Users } from "./Users";
 
 export const Appbar = (props) => {
   const name = props.name;
   const navigate = useNavigate();
   return (
-    <div className="shadow border-b border-slate-300 h-15 flex justify-between ">
-      <div className="flex flex-col justify-center h-full ml-4 w-26">
+    <div className="shadow border-b border-slate-300 h-15  flex justify-between ">
+      <div className="flex flex-col justify-center h-full ml-1 w-26">
         <button
           className="cursor-pointer"
           onClick={() => {
@@ -16,6 +17,50 @@ export const Appbar = (props) => {
           <img src="/logo.png" alt="" />{" "}
         </button>
       </div>
+      <div className="hidden sm:flex flex-col justify-center text-slate-600">
+        <button
+          className="cursor-pointer"
+          onClick={() => {
+            navigate("/dashboard");
+          }}
+        >
+          Home
+        </button>
+      </div>
+
+      <div className="flex flex-col justify-center text-slate-600 ">
+        <button
+          className="cursor-pointer"
+          onClick={() => {
+            navigate("/Users");
+          }}
+        >
+          Send money
+        </button>
+      </div>
+
+      <div className="hidden sm:flex flex-col justify-center text-slate-600 ">
+        <button
+          className="cursor-pointer"
+          onClick={() => {
+            navigate("/Users");
+          }}
+        >
+          User Profile
+        </button>
+      </div>
+
+      <div className="hidden sm:flex flex-col justify-center  text-slate-600">
+        <button
+          className="cursor-pointer"
+          onClick={() => {
+            navigate("/dashboard");
+          }}
+        >
+          About us
+        </button>
+      </div>
+
       <div className="flex">
         <div className="flex flex-col justify-center h-full mr-4 text text-slate-600">
           {name}

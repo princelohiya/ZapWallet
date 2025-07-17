@@ -15,9 +15,9 @@ export const Send = (props) => {
       <Appbar name={props.name}></Appbar>
       <div className="flex justify-center min-h-screen pt-7 bg-gray-100">
         <div className="h-full flex flex-col justify-center">
-          <div className="border h-min text-card-foreground max-w-md p-4 space-y-2 w-96 bg-white shadow-lg has-focus-visible:border-orange-400 ">
+          <div className="border h-min rounded-lg text-card-foreground max-w-md p-4 space-y-2 w-96 bg-white shadow-lg has-focus-visible:border-orange-400 ">
             <button
-              className="flex justify-center h-42 w-full cursor-pointer"
+              className="flex justify-center h-36 pt-3 w-full cursor-pointer"
               onClick={() => {
                 navigate("/dashboard");
               }}

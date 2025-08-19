@@ -10,8 +10,6 @@ import Skeleton from "react-loading-skeleton";
 import { Loader } from "../components/LoaderComponent";
 
 export const Dashboard = (props) => {
-  const navigate = useNavigate();
-
   return (
     <div>
       <Appbar name={props.name} />

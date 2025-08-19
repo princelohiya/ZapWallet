@@ -49,7 +49,7 @@ export const Signin = (props) => {
                     console.error("Error signing in:", error);
                     alert("Invalid credentials");
                   });
-                localStorage.setItem("token", response.data.token);
+                localStorage.setItem("token", `Bearer ${response.data.token}`);
                 await props.fetchUser();
                 navigate("/dashboard");
               }}

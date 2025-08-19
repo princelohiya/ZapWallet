@@ -58,17 +58,23 @@ function App() {
           ></Route>
           <Route
             path="/dashboard"
-            element={<Dashboard name={name} balance={balance} />}
+            element={
+              <ProtectedRoute>
+                <Dashboard name={name} balance={balance} />
+              </ProtectedRoute>
+            }
           ></Route>
           <Route
             path="/send"
             element={
-              <Send
-                name={name}
-                balance={balance}
-                setBalance={setBalance}
-                fetchUser={fetchUser}
-              />
+              <ProtectedRoute>
+                <Send
+                  name={name}
+                  balance={balance}
+                  setBalance={setBalance}
+                  fetchUser={fetchUser}
+                />
+              </ProtectedRoute>
             }
           ></Route>
           <Route

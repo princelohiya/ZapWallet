@@ -1,9 +1,13 @@
 const mongoose = require("mongoose");
 
 async function dbconnect() {
-  await mongoose.connect(
-    "mongodb+srv://princelohia:QJ4Dt3rCsH8pi6uz@cluster0.pxxq4.mongodb.net/"
-  );
+  try {
+    await mongoose.connect(
+      "mongodb+srv://princelohia:QJ4Dt3rCsH8pi6uz@cluster0.pxxq4.mongodb.net/"
+    );
+  } catch (err) {
+    console.error("Database connection error:", err);
+  }
 }
 dbconnect();
 

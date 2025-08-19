@@ -70,7 +70,11 @@ export const Signup = (props) => {
                     }
                   );
                   if (response.status === 200) {
-                    localStorage.setItem("token", response.data.token);
+                    localStorage.setItem(
+                      "token",
+                      `Bearer ${response.data.token}`
+                    );
+
                     await props.fetchUser();
                     navigate("/dashboard");
                   }

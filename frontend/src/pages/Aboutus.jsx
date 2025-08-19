@@ -34,15 +34,15 @@ export const Aboutus = (props) => {
             </div>
           </div>
         </div>
-        <div className="flex justify-evenly">
+        <div className="flex justify-evenly pb-40">
           <div className="h-49 w-58">
-            <img src="/photo1.png"></img>
+            <img className=" rounded-2xl" src="/photo1.png"></img>
           </div>
           <div className="hidden sm:block h-49 w-58">
-            <img src="/photo4.png"></img>
+            <img className=" rounded-2xl" src="/photo4.png"></img>
           </div>
           <div className="hidden sm:block h-49 w-58">
-            <img src="/photo3.png"></img>
+            <img className=" rounded-2xl" src="/photo3.png"></img>
           </div>
         </div>
       </div>

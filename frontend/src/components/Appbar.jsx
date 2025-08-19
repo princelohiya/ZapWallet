@@ -17,51 +17,54 @@ export const Appbar = (props) => {
           <img src="/logo.png" alt="" />{" "}
         </button>
       </div>
-      <div className="hidden sm:flex flex-col justify-center text-slate-600 text-lg font-semibold">
-        <button
-          className="cursor-pointer"
-          onClick={() => {
-            navigate("/dashboard");
-          }}
-        >
-          Home
-        </button>
-      </div>
-
-      <div className="flex flex-col justify-center text-slate-600 text-lg font-semibold">
-        <button
-          className="cursor-pointer"
-          onClick={() => {
-            navigate("/Userspage");
-          }}
-        >
-          Send money
-        </button>
-      </div>
-
-      <div className="hidden sm:flex flex-col justify-center text-slate-600 text-lg font-semibold">
-        <button
-          className="cursor-pointer"
-          onClick={() => {
-            navigate("/Userspage");
-          }}
-        >
-          User Profile
-        </button>
-      </div>
-
-      <div className="hidden md:flex flex-col justify-center  text-slate-600 text-lg font-semibold">
-        <button
-          className="cursor-pointer"
-          onClick={() => {
-            navigate("/Aboutus");
-          }}
-        >
-          About us
-        </button>
-      </div>
 
       <div className="flex">
+        <div className="flex pr-8 space-x-8  ">
+          <div className="hidden md:flex flex-col justify-center text-slate-600 text-lg font-semibold">
+            <button
+              className="cursor-pointer"
+              onClick={() => {
+                navigate("/dashboard");
+              }}
+            >
+              Home
+            </button>
+          </div>
+
+          <div className="flex flex-col justify-center text-slate-600 text-lg font-semibold">
+            <button
+              className="cursor-pointer"
+              onClick={() => {
+                navigate("/Userspage");
+              }}
+            >
+              Send money
+            </button>
+          </div>
+
+          <div className="hidden sm:flex flex-col justify-center text-slate-600 text-lg font-semibold">
+            <button
+              className="cursor-pointer"
+              onClick={() => {
+                navigate("/Userspage");
+              }}
+            >
+              User Profile
+            </button>
+          </div>
+
+          <div className="hidden md:flex flex-col justify-center  text-slate-600 text-lg font-semibold">
+            <button
+              className="cursor-pointer"
+              onClick={() => {
+                navigate("/Aboutus");
+              }}
+            >
+              About us
+            </button>
+          </div>
+        </div>
+
         <div className="flex flex-col justify-center h-full mr-4 text text-slate-600">
           {name}
           <div className="flex justify-end text-xs ">

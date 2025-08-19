@@ -14,7 +14,7 @@ export const Users = () => {
     axios
       .get("http://localhost:3000/user/bulk?filter=" + filter, {
         headers: {
-          token: `Bearer ${localStorage.getItem("token")}`,
+          token: localStorage.getItem("token"),
         },
       })
       .then((response) => {
@@ -50,7 +50,7 @@ function User({ user }) {
   return (
     <div className="flex justify-between">
       <div className="flex">
-        <div className="rounded-full h-12 w-12 bg-slate-200 flex justify-center mt-1 mr-2">
+        <div className="rounded-full h-12 w-12 bg-slate-200 flex justify-center mt-2 mr-2">
           <div className="flex flex-col justify-center h-full text-3xl text-orange-500">
             {user.firstName[0].toUpperCase()}
           </div>

@@ -52,6 +52,10 @@ export const Send = (props) => {
                   </label>
                   <input
                     onChange={(e) => {
+                      if (e.target.value > props.balance) {
+                        alert("Insufficient balance");
+                        e.target.value = 0;
+                      }
                       setAmount(e.target.value);
                     }}
                     type="number"
@@ -63,6 +67,10 @@ export const Send = (props) => {
                 <button
                   className="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-orange-500 text-white"
                   onClick={async () => {
+                    if (amount <= 0) {
+                      alert("Please enter a valid amount");
+                      return;
+                    }
                     const response = await axios.post(
                       "http://localhost:3000/account/transfer",
                       {
@@ -71,7 +79,7 @@ export const Send = (props) => {
                       },
                       {
                         headers: {
-                          token: "Bearer " + localStorage.getItem("token"),
+                          token: localStorage.getItem("token"),
                         },
                       }
                     );

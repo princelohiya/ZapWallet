@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { set } from "mongoose";
 import Skeleton from "react-loading-skeleton";
-import { Loader } from "../components/LoaderComponent";
+import { Spinner } from "../components/Loader";
 
 export const Dashboard = (props) => {
   return (

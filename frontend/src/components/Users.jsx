@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Button } from "./Button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Skeleton from "react-loading-skeleton";
+import { Spinner } from "./Loader";
+import { Skeleton } from "./Skeleton";
 
 export const Users = () => {
   // Replace with backend call
@@ -20,7 +21,23 @@ export const Users = () => {
       .then((response) => {
         setUsers(response.data.user);
       });
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 400);
   }, [filter]);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center">
+        <Skeleton></Skeleton>
+        <Skeleton></Skeleton>
+        <Skeleton></Skeleton>
+        <Skeleton></Skeleton>
+        <Skeleton></Skeleton>
+      </div>
+    );
+  }
 
   return (
     <>

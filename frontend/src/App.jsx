@@ -11,6 +11,7 @@ import axios from "axios";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Userspage } from "./pages/Userspage";
 import { Aboutus } from "./pages/Aboutus";
+import { Spinner } from "./components/Loader";
 
 // npm install jwt-decode
 // npm install axios
@@ -18,6 +19,7 @@ import { Aboutus } from "./pages/Aboutus";
 function App() {
   const [name, setName] = useState("Loading...");
   const [balance, setBalance] = useState("Loading...");
+  const [loading, setLoading] = useState(true);
 
   const fetchUser = async () => {
     const token = localStorage.getItem("token");
@@ -32,6 +34,11 @@ function App() {
       const user = response.data.user;
       setName(`${user.firstName} ${user.lastName}`);
       setBalance(Math.floor(user.balance * 100) / 100);
+
+      // adding artificial delay
+      setTimeout(() => {
+        setLoading(false);
+      }, 200);
     } catch (err) {
       console.error("Error fetching user data:", err);
       setName("Unknown User");
@@ -41,6 +48,19 @@ function App() {
   useEffect(() => {
     fetchUser();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-white-950 text-black">
+        <div className="text-xl font-semibold mb-4">
+          Please wait, loading...
+        </div>
+        <div className="">
+          <Spinner />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

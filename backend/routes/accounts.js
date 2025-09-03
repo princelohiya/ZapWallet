@@ -1,0 +1,186 @@
+const express = require("express");
+const { authMiddleware } = require("../middleware");
+const { Account, Transaction, User } = require("../db");
+const { default: mongoose } = require("mongoose");
+
+const router = express.Router();
+
+// /balance end point
+
+router.get("/balance", authMiddleware, async (req, res) => {
+  const account = await Account.findOne({
+    userId: req.userId,
+  });
+
+  res.json({
+    balance: account.balance,
+  });
+});
+
+// /transfer end point
+
+router.post("/transfer", authMiddleware, async (req, res) => {
+  const session = await mongoose.startSession();
+
+  session.startTransaction();
+
+  const { amount, to } = req.body;
+
+  // Fetch the accounts within the transaction
+  const account = await Account.findOne({ userId: req.userId }).session(
+    session
+  );
+
+  if (!account) {
+    await session.abortTransaction();
+    return res.status(404).json({
+      message: "account not found/ invalid account",
+    });
+  }
+
+  if (account.balance < amount) {
+    await session.abortTransaction();
+    return res.status(400).json({
+      message: "Insufficient balance",
+    });
+  }
+
+  const toAccount = await Account.findOne({ userId: to }).session(session);
+
+  if (!toAccount) {
+    await session.abortTransaction();
+    return res.status(404).json({
+      message: "Invalid account",
+    });
+  }
+
+  // Perform the transfer
+  await Account.updateOne(
+    { userId: req.userId },
+    { $inc: { balance: -amount } }
+  ).session(session);
+
+  await Account.updateOne(
+    { userId: to },
+    { $inc: { balance: amount } }
+  ).session(session);
+
+  //resolve name from userId
+  const senderUserId = account.userId;
+  const receiverUserId = toAccount.userId;
+
+  const senderName = await User.findById(senderUserId).select("firstName");
+  const receiverName = await User.findById(receiverUserId).select("firstName");
+  console.log("Sender Name:", senderName.firstName);
+  console.log("Receiver Name:", receiverName.firstName);
+
+  await Transaction.create(
+    [
+      {
+        fromAccountId: account._id,
+        toAccountId: toAccount._id,
+        amount,
+        type: "debit",
+      },
+    ],
+    { session }
+  );
+
+  // Commit the transaction
+  await session.commitTransaction();
+
+  res.json({
+    message: "Transfer successful",
+  });
+});
+
+// Endpoint to get last 10 transactions for the authenticated user
+router.get("/transactions", authMiddleware, async (req, res) => {
+  const account = await Account.findOne({ userId: req.userId });
+  if (!account) {
+    return res.status(404).json({ message: "Account not found" });
+  }
+
+  // Find transactions for debit only
+  const debitTransactions = await Transaction.find({
+    fromAccountId: account._id,
+  });
+
+  // Find transactions for credit only
+  const CreditTransactions = await Transaction.find({
+    toAccountId: account._id,
+  });
+
+  const transactions = [...debitTransactions, ...CreditTransactions];
+
+  // Sort transactions by timestamp in descending order and limit to 10
+  transactions.sort((a, b) => {
+    // -1 means do not swap
+    if (a.timestamp > b.timestamp) return -1;
+    // 1 means swap
+    if (a.timestamp < b.timestamp) return 1;
+    return 0;
+  });
+
+  // Format transactions to include type and name
+  const formatted = transactions.map((tx) => ({
+    type: tx.fromAccountId.equals(account._id) ? "debit" : "credit",
+    amount: tx.amount,
+    date: tx.timestamp,
+    name: tx.fromAccountId.equals(account._id)
+      ? tx.toAccountId.userId // Assuming userId is the name, adjust as needed
+      : tx.fromAccountId.userId, // Assuming userId is the name, adjust as needed
+  }));
+
+  res.json({ transactions: formatted });
+});
+
+//-----------------------------------------------------------------
+// async function transfer(req) {
+//   const session = await mongoose.startSession();
+//   session.startTransaction();
+//   const { amount, to } = req.body;
+//   // Fetch the accounts within the transaction
+//   const account = await Account.findOne({ userId: req.userId }).session(
+//     session
+//   );
+//   if (!account || account.balance < amount) {
+//     await session.abortTransaction();
+//     console.log("Insufficient balance");
+//     return;
+//   }
+//   const toAccount = await Account.findOne({ userId: to }).session(session);
+//   if (!toAccount) {
+//     await session.abortTransaction();
+//     console.log("Invalid account");
+//     return;
+//   }
+//   // Perform the transfer
+//   await Account.updateOne(
+//     { userId: req.userId },
+//     { $inc: { balance: -amount } }
+//   ).session(session);
+//   await Account.updateOne(
+//     { userId: to },
+//     { $inc: { balance: amount } }
+//   ).session(session); // Commit the transaction
+//   await session.commitTransaction();
+//   console.log("done");
+// }
+
+// transfer({
+//   userId: "65ac44e10ab2ec750ca666a5",
+//   body: {
+//     to: "65ac44e40ab2ec750ca666aa",
+//     amount: 100,
+//   },
+// });
+// transfer({
+//   userId: "65ac44e10ab2ec750ca666a5",
+//   body: {
+//     to: "65ac44e40ab2ec750ca666aa",
+//     amount: 100,
+//   },
+// });
+
+module.exports = router;

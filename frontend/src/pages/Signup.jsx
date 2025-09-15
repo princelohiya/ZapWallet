@@ -61,7 +61,7 @@ export const Signup = (props) => {
               onClick={async () => {
                 try {
                   const response = await axios.post(
-                    "http://localhost:3000/user/signup",
+                    "https://zapwallet.onrender.com/user/signup",
                     {
                       username,
                       firstName,

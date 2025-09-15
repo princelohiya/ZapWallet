@@ -13,7 +13,7 @@ export const Transactions = (props) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/account/transactions", {
+      .get("https://zapwallet.onrender.com/account/transactions", {
         headers: {
           token: localStorage.getItem("token"),
         },

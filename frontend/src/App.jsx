@@ -33,7 +33,7 @@ function App() {
       const userId = decoded.userId; // depends on what you stored in token
 
       const response = await axios.get(
-        "http://localhost:3000/user/me?_id=" + userId
+        "https://zapwallet.onrender.com/user/me?_id=" + userId
       );
 
       const user = response.data.user;

@@ -24,7 +24,7 @@ export const Send = (props) => {
       return;
     }
     const response = await axios.post(
-      "http://localhost:3000/account/transfer",
+      "https://zapwallet.onrender.com/account/transfer",
       {
         to: id,
         amount,

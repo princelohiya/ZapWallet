@@ -12,7 +12,7 @@ export const Users = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/user/bulk?filter=" + filter, {
+      .get("https://zapwallet.onrender.com/user/bulk?filter=" + filter, {
         headers: {
           token: localStorage.getItem("token"),
         },

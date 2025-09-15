@@ -19,7 +19,7 @@ export const Aboutus = (props) => {
       <div className="m-10">
         <div className="text-lg font-semibold font-sans">
           <div className="flex justify-center">
-            <h2 className="text-6xl pb-3">About Us</h2>
+            <h2 className="text-6xl pb-3 ">About Us</h2>
           </div>
 
           {loading ? (
@@ -31,7 +31,7 @@ export const Aboutus = (props) => {
             </div>
           ) : (
             <>
-              <div className="m-4">
+              <div className="m-4 space-y-4">
                 <div>
                   At ZapWallet, we believe managing your money should be simple,
                   secure, and stress-free. We’ve created a digital wallet

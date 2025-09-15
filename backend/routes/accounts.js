@@ -69,11 +69,6 @@ router.post("/transfer", authMiddleware, async (req, res) => {
   const senderUserId = account.userId;
   const receiverUserId = toAccount.userId;
 
-  const senderName = await User.findById(senderUserId).select("firstName");
-  const receiverName = await User.findById(receiverUserId).select("firstName");
-  console.log("Sender Name:", senderName.firstName);
-  console.log("Receiver Name:", receiverName.firstName);
-
   await Transaction.create(
     [
       {
@@ -100,18 +95,33 @@ router.get("/transactions", authMiddleware, async (req, res) => {
   if (!account) {
     return res.status(404).json({ message: "Account not found" });
   }
-
-  // Find transactions for debit only
+  // Find debit transactions (populate receiver)
   const debitTransactions = await Transaction.find({
     fromAccountId: account._id,
-  });
+  })
+    .populate({
+      path: "toAccountId",
+      populate: { path: "userId", select: "firstName" },
+    })
+    .populate({
+      path: "fromAccountId",
+      populate: { path: "userId", select: "firstName" },
+    });
 
-  // Find transactions for credit only
-  const CreditTransactions = await Transaction.find({
+  // Find credit transactions (populate sender)
+  const creditTransactions = await Transaction.find({
     toAccountId: account._id,
-  });
+  })
+    .populate({
+      path: "fromAccountId",
+      populate: { path: "userId", select: "firstName" },
+    })
+    .populate({
+      path: "toAccountId",
+      populate: { path: "userId", select: "firstName" },
+    });
 
-  const transactions = [...debitTransactions, ...CreditTransactions];
+  const transactions = [...debitTransactions, ...creditTransactions];
 
   // Sort transactions by timestamp in descending order and limit to 10
   transactions.sort((a, b) => {
@@ -124,16 +134,18 @@ router.get("/transactions", authMiddleware, async (req, res) => {
 
   // Format transactions to include type and name
   const formatted = transactions.map((tx) => ({
-    type: tx.fromAccountId.equals(account._id) ? "debit" : "credit",
+    type: tx.fromAccountId._id.equals(account._id) ? "debit" : "credit",
     amount: tx.amount,
     date: tx.timestamp,
-    name: tx.fromAccountId.equals(account._id)
-      ? tx.toAccountId.userId // Assuming userId is the name, adjust as needed
-      : tx.fromAccountId.userId, // Assuming userId is the name, adjust as needed
+    name: tx.fromAccountId._id.equals(account._id)
+      ? tx.toAccountId.userId.firstName // receiver
+      : tx.fromAccountId.userId.firstName, // sender
   }));
 
   res.json({ transactions: formatted });
 });
+
+module.exports = router;
 
 //-----------------------------------------------------------------
 // async function transfer(req) {
@@ -182,5 +194,3 @@ router.get("/transactions", authMiddleware, async (req, res) => {
 //     amount: 100,
 //   },
 // });
-
-module.exports = router;

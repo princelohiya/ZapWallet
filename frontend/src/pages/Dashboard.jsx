@@ -6,8 +6,9 @@ import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { set } from "mongoose";
-import Skeleton from "react-loading-skeleton";
+import { Skeleton } from "../components/Skeleton";
 import { Spinner } from "../components/Loader";
+import { Transactions } from "./Transactions";
 
 export const Dashboard = (props) => {
   const [loading, setLoading] = useState(true);
@@ -17,23 +18,25 @@ export const Dashboard = (props) => {
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center">
-        <Skeleton></Skeleton>
-        <Skeleton></Skeleton>
-        <Skeleton></Skeleton>
-        <Skeleton></Skeleton>
-        <Skeleton></Skeleton>
-      </div>
-    );
-  }
   return (
     <div>
       <Appbar name={props.name} />
       <div className="m-8">
         <Balance value={props.balance} />
-        <Users />
+        {loading ? (
+          <div>
+            <Skeleton></Skeleton>
+            <Skeleton></Skeleton>
+            <Skeleton></Skeleton>
+            <Skeleton></Skeleton>
+          </div>
+        ) : (
+          <div className="flex justify-between">
+            <div className="mt-8 h-full w-full">
+              <Users></Users>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

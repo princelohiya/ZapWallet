@@ -90,7 +90,7 @@ export const Appbar = (props) => {
         </div>
 
         {/* Mobile Hamburger */}
-        <div className="md:hidden flex items-center">
+        <div className="md:hidden flex items-center mr-3">
           <button onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? <X size={28} /> : <Menu size={28} />}
           </button>

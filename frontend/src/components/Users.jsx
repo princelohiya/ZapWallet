@@ -9,6 +9,7 @@ export const Users = () => {
   // Replace with backend call
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
@@ -19,31 +20,39 @@ export const Users = () => {
       })
       .then((response) => {
         setUsers(response.data.user);
+        setLoading(false);
       });
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 400);
   }, [filter]);
 
   return (
     <>
       <div className="font-bold mt-6 text-3xl ">Users</div>
-      <div className="my-2">
-        <input
-          onChange={(e) => {
-            setFilter(e.target.value);
-          }}
-          type="text"
-          placeholder="Search users..."
-          className="w-full px-2 py-1 border rounded border-slate-300 hover:border-slate-400 focus:outline-none focus:ring-1 focus:ring-orange-500"
-        ></input>
-      </div>
-      <div>
-        {users.map((user) => (
-          <User user={user} />
-        ))}
-      </div>
+      {loading ? (
+        <div>
+          <Skeleton></Skeleton>
+          <Skeleton></Skeleton>
+          <Skeleton></Skeleton>
+          <Skeleton></Skeleton>
+        </div>
+      ) : (
+        <div>
+          <div className="my-2">
+            <input
+              onChange={(e) => {
+                setFilter(e.target.value);
+              }}
+              type="text"
+              placeholder="Search users..."
+              className="w-full px-2 py-1 border rounded border-slate-300 hover:border-slate-400 focus:outline-none focus:ring-1 focus:ring-orange-500"
+            ></input>
+          </div>
+          <div>
+            {users.map((user) => (
+              <User user={user} />
+            ))}
+          </div>
+        </div>
+      )}
     </>
   );
 };

@@ -39,11 +39,7 @@ function App() {
       const user = response.data.user;
       setName(`${user.firstName} ${user.lastName}`);
       setBalance(Math.floor(user.balance * 100) / 100);
-
-      // adding artificial delay
-      setTimeout(() => {
-        setLoading(false);
-      }, 200);
+      setLoading(false);
     } catch (err) {
       console.error("Error fetching user data:", err);
       setName("Unknown User");

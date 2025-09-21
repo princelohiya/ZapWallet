@@ -21,22 +21,12 @@ export const Dashboard = (props) => {
   return (
     <div>
       <Appbar name={props.name} />
-      <div className="m-8">
+      <div className="px-4 sm:px-8 py-8 max-w-2xl mx-auto">
         <Balance value={props.balance} />
-        {loading ? (
-          <div>
-            <Skeleton></Skeleton>
-            <Skeleton></Skeleton>
-            <Skeleton></Skeleton>
-            <Skeleton></Skeleton>
-          </div>
-        ) : (
-          <div className="flex justify-between">
-            <div className="mt-8 h-full w-full">
-              <Users></Users>
-            </div>
-          </div>
-        )}
+
+        <div className="flex flex-col gap-8 mt-8">
+          <Users />
+        </div>
       </div>
     </div>
   );

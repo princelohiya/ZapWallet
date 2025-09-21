@@ -20,10 +20,8 @@ export const Transactions = (props) => {
       })
       .then((response) => {
         setTransactions(response.data.transactions);
+        setLoading(false);
       });
-
-    const timer = setTimeout(() => setLoading(false), 500);
-    return () => clearTimeout(timer);
   }, []);
 
   return (

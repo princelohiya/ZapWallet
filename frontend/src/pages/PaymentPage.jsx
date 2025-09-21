@@ -32,11 +32,13 @@ export const PaymentPage = (props) => {
   return (
     <div>
       <Appbar name={props.name}></Appbar>
-      <div className="flex justify-center h-screen pt-1 bg-gray-100">
+      <div className="flex justify-center h-screen bg-gray-100">
         <div className="h-full flex flex-col justify-center ">
-          <div className="border-4 border-gray-200 h-min text-card-foreground max-w-md p-4 space-y-8 bg-white shadow-lg rounded-lg w-88 sm:w-128">
-            <div className="flex flex-col space-y-1.5 p-6">
-              <h2 className="text-3xl font-bold text-center">Payment Status</h2>
+          <div className="border-4 border-gray-200 h-min text-card-foreground max-w-md p-4 space-y-4 bg-white shadow-lg rounded-lg w-88 sm:w-128">
+            <div className="flex flex-col pt-6">
+              <h2 className="text-3xl font-bold text-center pb-3">
+                Payment Status
+              </h2>
             </div>
             <div className=" flex justify-center">
               <svg

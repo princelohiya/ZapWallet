@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
 import { Appbar } from "../components/Appbar";
 import { Spinner } from "../components/Loader";
+import { set } from "zod";
 
 export const Send = (props) => {
   const [loading, setLoading] = useState(true);
@@ -19,6 +20,8 @@ export const Send = (props) => {
   }, []);
 
   const handleTransfer = async (e) => {
+    setLoading(true);
+    e.preventDefault();
     if (amount <= 0) {
       alert("Please enter a valid amount");
       return;

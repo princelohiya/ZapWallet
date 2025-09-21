@@ -32,7 +32,7 @@ export const Transactions = (props) => {
           <div className="font-bold mt-6 text-4xl ">Transactions</div>
         )}
         <div className="flex justify-center pt-7">
-          <div className="border-4 border-gray-100 max-w-md p-4 space-y-8 w-96  shadow-lg rounded-lg">
+          <div className="border-4 border-gray-200 max-w-md p-4 space-y-8 shadow-lg rounded-lg w-88 sm:w-128">
             {loading ? (
               <div className="flex justify-center items-center h-94">
                 <Spinner />

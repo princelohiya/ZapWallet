@@ -46,9 +46,9 @@ export const Send = (props) => {
   return (
     <div>
       <Appbar name={props.name}></Appbar>
-      <div className="flex justify-center min-h-screen pt-7 bg-gray-100">
+      <div className="flex justify-center min-h-screen pt-7 bg-gray-100 ">
         <div className="h-full flex flex-col justify-center">
-          <div className="border h-min rounded-lg text-card-foreground max-w-md p-4 space-y-2 w-96 bg-white shadow-lg">
+          <div className="border-4 border-gray-200 bg-white shadow-lg h-min rounded-lg text-card-foreground max-w-md p-4 space-y-2 w-96 ">
             {/* Card content while loading */}
             {loading ? (
               <div className="flex justify-center items-center h-64">
@@ -57,12 +57,14 @@ export const Send = (props) => {
             ) : (
               <>
                 <button
-                  className="flex justify-center h-36 pt-3 w-full cursor-pointer"
+                  className="w-full cursor-pointer"
                   onClick={() => {
                     navigate("/dashboard");
                   }}
                 >
-                  <img src="/logo.png" alt="" />
+                  <div className="flex justify-center h-36 pt-3 w-full cursor-pointer">
+                    <img src="/logo.png" alt="" />
+                  </div>
                 </button>
 
                 <div className="flex flex-col p-3">

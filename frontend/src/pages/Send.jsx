@@ -48,7 +48,7 @@ export const Send = (props) => {
       <Appbar name={props.name}></Appbar>
       <div className="flex justify-center min-h-screen pt-7 bg-gray-100 ">
         <div className="h-full flex flex-col justify-center">
-          <div className="border-4 border-gray-200 bg-white shadow-lg h-min rounded-lg text-card-foreground max-w-md p-4 space-y-2 w-96 ">
+          <div className="border-4 border-gray-200 bg-white shadow-lg h-min rounded-lg text-card-foreground max-w-md p-4 space-y-2 w-88 sm:w-128">
             {/* Card content while loading */}
             {loading ? (
               <div className="flex justify-center items-center h-64">

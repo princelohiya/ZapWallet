@@ -34,11 +34,11 @@ export const PaymentPage = (props) => {
       <Appbar name={props.name}></Appbar>
       <div className="flex justify-center h-screen pt-1 bg-gray-100">
         <div className="h-full flex flex-col justify-center ">
-          <div className="border h-min text-card-foreground max-w-md p-4 space-y-8 w-96 bg-white shadow-lg rounded-lg">
+          <div className="border-4 border-gray-200 h-min text-card-foreground max-w-md p-4 space-y-8 bg-white shadow-lg rounded-lg w-88 sm:w-128">
             <div className="flex flex-col space-y-1.5 p-6">
               <h2 className="text-3xl font-bold text-center">Payment Status</h2>
             </div>
-            <div className=" flex justify-center ">
+            <div className=" flex justify-center">
               <svg
                 width="320"
                 height="110"
@@ -63,19 +63,13 @@ export const PaymentPage = (props) => {
                   stroke-linejoin="round"
                 />
               </svg>
-
-              {/* <svg width="320" height="120" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="12" r="10" stroke="#dc3545" stroke-width="2" fill="none"/>
-                        <path d="M8 8l8 8M16 8l-8 8" stroke="#dc3545" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                       */}
             </div>
             <div className="p-6">
               <div className="space-y-4">
                 <h3 className=" text-2xl font-bold text-center ">
                   Payment Successful
                 </h3>
-                <div className=" flex flex-col justify-center h-ful pl-10 ">
+                <div className=" flex flex-col justify-center ">
                   <h6 className="  font-semibold pl-10">
                     {" "}
                     Amount Paid : Rs. {amount}{" "}

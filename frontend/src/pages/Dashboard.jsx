@@ -11,13 +11,6 @@ import { Spinner } from "../components/Loader";
 import { Transactions } from "./Transactions";
 
 export const Dashboard = (props) => {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 500);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <div>
       <Appbar name={props.name} />

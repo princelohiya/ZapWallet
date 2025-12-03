@@ -28,13 +28,15 @@ function App() {
       }, 500); // 0.5 second delay
       return () => clearTimeout(timer);
     }
+    //produciton url
+    // const url = "https://zapwallet.onrender.com/user/me?_id=";
+    //dev url
+    const url = "http://localhost:3000/user/me?_id=";
     try {
       const decoded = jwtDecode(token);
       const userId = decoded.userId; // depends on what you stored in token
 
-      const response = await axios.get(
-        "https://zapwallet.onrender.com/user/me?_id=" + userId
-      );
+      const response = await axios.get(url + userId);
 
       const user = response.data.user;
       setName(`${user.firstName} ${user.lastName}`);
@@ -48,6 +50,11 @@ function App() {
 
   useEffect(() => {
     fetchUser();
+    const interval = setInterval(() => {
+      axios.get("https://zapwallet.onrender.com/health").catch(() => {});
+    }, 5 * 60 * 1000); // 5 min
+
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) {

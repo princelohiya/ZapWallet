@@ -24,28 +24,38 @@ export const Signin = (props) => {
   }, []);
 
   const handleSignIn = async (e) => {
-    if (e) e.preventDefault(); // stops the browser from reloading
+    if (e) e.preventDefault();
     setLoading(true);
-    //produciton url
+
     const url = "https://zapwallet.onrender.com/user/signin";
-    //dev url
-    // const url = "http://localhost:3000/user/signin";
 
     const response = await axios
       .post(url, {
-        username: username,
-        password: password,
+        username,
+        password,
       })
       .catch((error) => {
         console.error("Error signing in:", error);
         setLoading(false);
         setRejected(true);
+        return null;
       });
+
+    if (!response) return; // <-- prevents infinite loading
+
     localStorage.setItem("token", `Bearer ${response.data.token}`);
-    await props.fetchUser();
+
+    try {
+      await props.fetchUser();
+    } catch (err) {
+      console.log("Fetch user failed", err);
+    }
+
     navigate("/dashboard");
     setLoading(false);
   };
+
+  if (!response) return; // <-- prevents undefined access
 
   if (loading) {
     return (

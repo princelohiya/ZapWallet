@@ -50,6 +50,7 @@ export const Signup = (props) => {
       console.error("Error signing up:", error);
       setLoading(false);
       setRejected(true);
+      return null;
     }
   };
 

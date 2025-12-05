@@ -31,23 +31,25 @@ export const Signin = (props) => {
     //dev url
     // const url = "http://localhost:3000/user/signin";
 
-    const response = await axios
-      .post(url, {
-        username: username,
-        password: password,
-      })
-      .catch((error) => {
-        console.error("Error signing in:", error);
-        setLoading(false);
-        setRejected(true);
-        return null;
-      });
-    localStorage.setItem("token", `Bearer ${response.data.token}`);
-    await props.fetchUser();
-    navigate("/dashboard");
-    setLoading(false);
+    try {
+      const response = await axios.post(url, { username, password });
 
-    if (!response) return; // <-- prevents undefined access
+      localStorage.setItem("token", `Bearer ${response.data.token}`);
+
+      // Don't block UI — load user after redirect
+      if (props.fetchUser) {
+        props
+          .fetchUser()
+          .catch((err) => console.log("Fetch user failed:", err));
+      }
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Sign-in failed:", error);
+      setRejected(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading) {

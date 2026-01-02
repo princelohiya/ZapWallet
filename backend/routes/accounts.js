@@ -2,6 +2,7 @@ const express = require("express");
 const { authMiddleware } = require("../middleware");
 const { Account, Transaction, User } = require("../db");
 const { default: mongoose } = require("mongoose");
+const zod = require("zod");
 
 const router = express.Router();
 
@@ -143,6 +144,62 @@ router.get("/transactions", authMiddleware, async (req, res) => {
   }));
 
   res.json({ transactions: formatted });
+});
+
+// Input validation schema
+const depositBody = zod.object({
+  amount: zod.number().positive().min(1, "Amount must be at least ₹1"),
+});
+
+// ROUTE: POST /account/deposit
+router.post("/deposit", authMiddleware, async (req, res) => {
+  const session = await mongoose.startSession();
+
+  session.startTransaction();
+
+  // 1. Validate Input
+  const { success, data, error } = depositBody.safeParse(req.body);
+
+  if (!success) {
+    await session.abortTransaction();
+    return res.status(400).json({
+      message: "Invalid amount",
+      error: error.errors,
+    });
+  }
+
+  const amount = data.amount;
+
+  try {
+    // 2. Perform the Atomic Update
+    // $inc increments the balance field by the specified amount
+    const result = await Account.updateOne(
+      { userId: req.userId },
+      { $inc: { balance: amount } }
+    );
+
+    if (result.matchedCount === 0) {
+      await session.abortTransaction();
+      // Should verify if user actually has an account initialized
+      return res.status(404).json({
+        message: "Account not found",
+      });
+    }
+
+    // 3. Return Success
+    res.status(200).json({
+      message: "Amount added successfully",
+      addedAmount: amount,
+    });
+  } catch (err) {
+    await session.abortTransaction();
+    console.error("Deposit Error:", err);
+    res.status(500).json({
+      message: "Internal server error while depositing money",
+    });
+  }
+  // Commit the transaction
+  await session.commitTransaction();
 });
 
 module.exports = router;

@@ -12,7 +12,7 @@ const Layout = ({ name }) => {
          The Appbar is h-16 (4rem). We add pt-20 to push content down 
          so it doesn't hide behind the header.
       */}
-      <div className="pt-20 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div className="pt-12 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <Outlet />
       </div>
     </div>

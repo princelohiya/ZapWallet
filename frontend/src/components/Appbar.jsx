@@ -13,6 +13,7 @@ export const Appbar = ({ name }) => {
 
   const navItems = [
     { label: "Home", path: "/dashboard" },
+    { label: "Add Money", path: "/Addmoney" },
     { label: "Send Money", path: "/send" }, // Fixed path from /Userspage to /send based on your routes
     { label: "Transactions", path: "/Transactions" },
     { label: "About Us", path: "/Aboutus" },

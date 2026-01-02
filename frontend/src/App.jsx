@@ -16,6 +16,7 @@ import { API_BASE_URL } from "./config/api";
 import Layout from "./Layout"; // Only Layout is needed, not Appbar
 import { AddMoney } from "./pages/Addmoney";
 import { PaymentSuccess } from "./pages/PaymentSuccess";
+import ScrollToTop from "./components/ScrollToTop";
 
 const Placeholder = ({ title }) => (
   <div className="min-h-[60vh] flex flex-col items-center justify-center bg-gray-50 text-center p-6">
@@ -82,6 +83,7 @@ function App() {
   return (
     <div>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           {/* --- PUBLIC ROUTES (No Navbar) --- */}
           <Route path="/" element={<Signin fetchUser={fetchUser} />} />

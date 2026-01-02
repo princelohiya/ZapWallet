@@ -12,6 +12,11 @@ export const Transactions = ({ name, limit, forDashboard }) => {
   const url = API_BASE_URL + "/account/transactions";
 
   useEffect(() => {
+    // Scroll to top immediately when this component loads
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     const fetchTransactions = async () => {
       try {
         const response = await axios.get(url, {

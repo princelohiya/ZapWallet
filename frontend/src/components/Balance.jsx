@@ -64,7 +64,7 @@ export const Balance = ({ value }) => {
         </div>
 
         {/* Bottom Row: Action Buttons */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-2">
           <button
             onClick={() => navigate("/send")}
             className="flex items-center justify-center gap-2 bg-white text-black font-bold py-3.5 px-4 rounded-xl hover:bg-gray-100 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)]"

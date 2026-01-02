@@ -65,7 +65,7 @@ export const Dashboard = ({ name, balance }) => {
             </div>
 
             {/* Glass Container for Transactions */}
-            <div className="bg-neutral-900/50 border border-white/5 rounded-3xl p-6 backdrop-blur-sm hover:border-white/10 transition-colors shadow-xl min-h-[300px]">
+            <div className="bg-neutral-950 border-2 border-white/5 rounded-3xl p-6 backdrop-blur-sm hover:border-white/10 transition-colors shadow-2xl min-h-[300px]">
               {/* Note: Since your Transactions component is a full page, 
                   you might want to create a smaller <TransactionList /> component later.
                   For now, we render it here, but ensure it handles being in a container.

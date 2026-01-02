@@ -7,5 +7,13 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   css: {
     transformer: "postcss", // <— ADD THIS
+    // tailwind.config.js
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['"Plus Jakarta Sans"', "sans-serif"],
+        },
+      },
+    },
   },
 });

@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react";
 import { BottomWarning } from "../components/BottomWarning";
 import { Button } from "../components/Button";
-import { Heading } from "../components/Heading";
 import { InputBox } from "../components/InputBox";
-import { SubHeading } from "../components/SubHeading";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { set } from "mongoose";
-import { Spinner } from "../components/Loader";
+// import { Spinner } from "../components/Loader"; // Optional: Use inside button if Button component supports it
+import { API_BASE_URL } from "../config/api";
 
 export const Signup = (props) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [rejected, setRejected] = useState(false);
+  // Consolidated state for cleaner management
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    username: "",
+    password: "",
+  });
+
+  const [error, setError] = useState(""); // String state for specific error messages
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -23,126 +25,178 @@ export const Signup = (props) => {
     if (token) {
       navigate("/dashboard");
     }
-  }, []);
+  }, [navigate]);
+
+  // Generic handler for input changes
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setError(""); // Clear error when user starts typing
+  };
+
+  const validateForm = () => {
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.username ||
+      !formData.password
+    ) {
+      setError("All fields are required.");
+      return false;
+    }
+    if (!formData.username.includes("@")) {
+      setError("Please enter a valid email address.");
+      return false;
+    }
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return false;
+    }
+    return true;
+  };
 
   const HandleSignup = async (e) => {
-    if (e) e.preventDefault(); // stops the browser from reloading
+    if (e) e.preventDefault();
+
+    if (!validateForm()) return;
+
     setLoading(true);
-    //produciton url
-    const url = "https://zapwallet.onrender.com/user/signin";
-    //dev url
-    // const url = "http://localhost:3000/user/signin";
+    setError("");
+
+    const url = `${API_BASE_URL}/user/signup`;
 
     try {
-      const response = await axios.post(url, {
-        username,
-        firstName,
-        lastName,
-        password,
-      });
+      const response = await axios.post(url, formData);
+
       if (response.status === 200) {
         localStorage.setItem("token", `Bearer ${response.data.token}`);
-
-        await props.fetchUser();
+        if (props.fetchUser) {
+          await props.fetchUser();
+        }
         navigate("/dashboard");
       }
-    } catch (error) {
-      console.error("Error signing up:", error);
+    } catch (err) {
+      console.error("Error signing up:", err);
+      // Capture specific message from backend if available, else default
+      const serverError =
+        err.response?.data?.message || "Signup failed. Please try again.";
+      setError(serverError);
+    } finally {
       setLoading(false);
-      setRejected(true);
-      return null;
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-white-950 text-black ">
-        <div className="text-xl font-semibold mb-4">
-          Please wait, loading...
-        </div>
-        <div className="">
-          <Spinner />
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <div className="flex flex-col justify-center h-full ml-1 w-21">
-        <button
-          className="cursor-pointer justify-center"
-          onClick={() => {
-            navigate("/dashboard");
-          }}
-        >
-          <img src="/logo.png" alt="" />{" "}
-        </button>
+    <div className="min-h-screen flex flex-col bg-neutral-950 text-gray-200 selection:bg-purple-500 selection:text-white relative overflow-hidden font-sans">
+      {/* Background Ambient Glow */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-purple-900/20 rounded-full blur-3xl opacity-50 animate-pulse"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-blue-900/20 rounded-full blur-3xl opacity-50 animate-pulse"></div>
       </div>
-      <div className="bg-slate-200 h-screen flex justify-center">
-        <div className="flex flex-col justify-center">
-          <div className="rounded-lg bg-white w-80 text-center p-2 h-max px-4">
-            <Heading label={"Sign up"} />
-            <SubHeading label={"Enter your infromation to create an account"} />
-            <InputBox
-              onChange={(e) => {
-                setFirstName(e.target.value);
-                setRejected(false);
-              }}
-              placeholder="Prince"
-              label={"First Name"}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  HandleSignup(e);
-                }
-              }}
-            />
-            <InputBox
-              onChange={(e) => {
-                setLastName(e.target.value);
-                setRejected(false);
-              }}
-              placeholder="Lohia"
-              label={"Last Name"}
-            />
-            <InputBox
-              onChange={(e) => {
-                setUsername(e.target.value);
-                setRejected(false);
-              }}
-              placeholder="prince@gmail.com"
-              label={"Email"}
-            />
-            <InputBox
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setRejected(false);
-              }}
-              type="password"
-              placeholder="123456"
-              label={"Password"}
-            />
-            <div className="pt-4">
-              <Button
-                onClick={(e) => {
-                  HandleSignup(e);
+
+      {/* 1. TOP HEADER */}
+      <div className="z-10 w-full border-b border-white/5 bg-neutral-900/50 backdrop-blur-md h-16 flex items-center px-6 lg:px-10 justify-between sticky top-0">
+        <div
+          onClick={() => navigate("/")}
+          className="cursor-pointer flex items-center gap-2 transition-opacity hover:opacity-80"
+        >
+          <img
+            src="/logo.png"
+            alt="ZapWallet"
+            className="h-18 w-auto object-contain" // Adjusted size for better header fit
+          />
+        </div>
+      </div>
+
+      {/* 2. MAIN CONTENT AREA */}
+      <div className="flex-1 flex justify-center items-center p-4 z-10">
+        <div className="flex flex-col justify-center w-full max-w-md">
+          {/* Glass Container */}
+          <div className="bg-neutral-900/60 border border-white/10 rounded-3xl p-8 backdrop-blur-xl shadow-2xl transition-all duration-300 relative">
+            {/* Loading Overlay (Optional: creates a disabled look when submitting) */}
+            {loading && (
+              <div className="absolute inset-0 bg-neutral-950/50 z-20 rounded-3xl cursor-wait"></div>
+            )}
+
+            <div className="text-center mb-6">
+              <div className="text-white text-3xl font-bold mb-2">Sign up</div>
+              <div className="text-gray-400 text-base">
+                Create your ZapWallet account
+              </div>
+            </div>
+
+            <form onSubmit={HandleSignup} className="space-y-4">
+              <div className="flex gap-2">
+                <div className="w-1/2">
+                  {/* Assuming InputBox accepts props normally. Added autoComplete/required */}
+                  <InputBox
+                    onChange={(e) => handleChange("firstName", e.target.value)}
+                    placeholder="Prince"
+                    label="First Name"
+                    className="text-"
+                    disabled={loading}
+                  />
+                </div>
+                <div className="w-1/2">
+                  <InputBox
+                    onChange={(e) => handleChange("lastName", e.target.value)}
+                    placeholder="Lohia"
+                    label="Last Name"
+                    className="text-white"
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+
+              <InputBox
+                onChange={(e) => handleChange("username", e.target.value)}
+                placeholder="prince@gmail.com"
+                label="Email"
+                type="email"
+                className="text-white"
+                autoComplete="email"
+                disabled={loading}
+              />
+
+              <InputBox
+                onChange={(e) => handleChange("password", e.target.value)}
+                type="password"
+                placeholder="••••••"
+                label="Password"
+                className="text-white"
+                autoComplete="new-password"
+                disabled={loading}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") HandleSignup(e);
                 }}
-                label={"Sign up"}
+              />
+
+              <div className="pt-4">
+                <div className="w-full relative">
+                  <Button
+                    onClick={HandleSignup}
+                    label={loading ? "Creating Account..." : "Sign up"}
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+            </form>
+
+            <div className="mt-4 text-center">
+              <BottomWarning
+                label="Already have an account?"
+                buttonText="Sign in"
+                to="/signin"
               />
             </div>
-            <BottomWarning
-              label={"Already have an account?"}
-              buttonText={"Sign in"}
-              to={"/signin"}
-            />
-          </div>
-          <div className="flex justify-center">
-            {rejected && (
-              <div className="text-red-500 text-sm pt-2 text-center w-76">
-                Invalid credentials or server is not responding Please try
-                again.
-              </div>
-            )}
+
+            {/* Error Message Area - Fixed height to prevent layout shift */}
+            <div className="h-6 mt-4 flex justify-center items-center">
+              {error && (
+                <div className="text-red-400 text-sm font-medium bg-red-900/20 border border-red-500/20 py-1 px-3 rounded-full animate-fadeIn">
+                  {error}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

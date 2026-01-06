@@ -21,7 +21,6 @@ export const Send = ({ name, balance, fetchUser }) => {
   if (!id) {
     return (
       <div className="min-h-screen bg-neutral-950 text-white">
-        <Appbar name={name} />
         <div className="flex justify-center pt-10 px-4">
           <div className="w-full max-w-3xl">
             <h1 className="text-3xl font-bold text-white mb-8">Send Money</h1>

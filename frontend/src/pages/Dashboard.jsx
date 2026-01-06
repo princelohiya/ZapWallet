@@ -9,7 +9,7 @@ export const Dashboard = ({ name, balance }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen w-full h-full bg-neutral-950 text-gray-200 selection:bg-purple-500 selection:text-white pb-20">
+    <div className="min-h-screen w-full h-full bg-red-800 text-gray-200 selection:bg-purple-500 selection:text-white pb-20">
       {/* 1. Sticky Navbar with Blur Effect */}
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">

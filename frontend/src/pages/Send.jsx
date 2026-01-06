@@ -75,9 +75,7 @@ export const Send = ({ name, balance, fetchUser }) => {
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white selection:bg-purple-500 selection:text-white">
-      <Appbar name={name} />
-
-      <div className="flex justify-center items-center min-h-[calc(100vh-64px)] px-4 py-12">
+      <div className="flex justify-center items-center min-h-[calc(100vh-64px)] px-4 py-10 relative">
         {/* Glass Card Container */}
         <div className="relative w-full max-w-md">
           {/* Background Glows */}

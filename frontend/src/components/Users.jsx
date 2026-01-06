@@ -51,7 +51,7 @@ export const Users = () => {
       </div>
 
       {/* 2. User List */}
-      <div className="flex flex-col gap-2 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+      <div className="flex flex-col gap-2 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-neutral-700 scrollbar-track-transparent">
         {loading ? (
           <div className="flex flex-col gap-3">
             {/* Simple Skeleton Fallback if your Skeleton component isn't dark-mode ready */}

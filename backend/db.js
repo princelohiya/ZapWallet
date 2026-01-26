@@ -3,8 +3,9 @@ const mongoose = require("mongoose");
 async function dbconnect() {
   try {
     await mongoose.connect(
-      "mongodb+srv://princelohia:QJ4Dt3rCsH8pi6uz@cluster0.pxxq4.mongodb.net/"
+      "mongodb+srv://prince:fnS1dwWiyhl59AoJ@cluster0.pxxq4.mongodb.net/?appName=Cluster0",
     );
+    console.log("Database connected successfully");
   } catch (err) {
     console.error("Database connection error:", err);
   }

@@ -100,10 +100,6 @@ export const Signin = ({ fetchUser }) => {
               <div className="text-gray-400 text-base">
                 Enter your credentials to access your account
               </div>
-              {/* Alternatively use your components if they are styled:
-                 <Heading label={"Sign in"} /> 
-                 <SubHeading label={"Enter your credentials..."} />
-               */}
             </div>
 
             <div className="space-y-4">

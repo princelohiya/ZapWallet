@@ -147,7 +147,7 @@ export const Signin = ({ fetchUser }) => {
           <div className="h-6 mt-4 flex justify-center">
             {rejected && (
               <div className="text-red-400 text-sm font-medium bg-red-900/20 border border-red-500/20 py-1.5 px-4 rounded-full animate-pulse">
-                Invalid credentials. Please try again.
+                Server Error or Invalid credentials. Please try again.
               </div>
             )}
           </div>

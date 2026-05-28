@@ -35,7 +35,7 @@ export const AddMoney = () => {
           headers: {
             token: token,
           },
-        }
+        },
       );
 
       setMessage({ type: "success", text: "Money added successfully!" });
@@ -141,7 +141,11 @@ export const AddMoney = () => {
                 {[100, 500, 1000, 2000].map((val) => (
                   <button
                     key={val}
-                    onClick={() => setAmount(val.toString())}
+                    onClick={() => {
+                      const newAmount = Number(amount) + val;
+                      setAmount(newAmount.toString());
+                      setMessage(null);
+                    }}
                     className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm hover:bg-white/10 hover:border-purple-500/30 transition-all text-gray-300 whitespace-nowrap"
                   >
                     + ₹{val}

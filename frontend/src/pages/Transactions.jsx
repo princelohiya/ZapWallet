@@ -93,6 +93,7 @@ const TransactionItem = ({ transaction }) => {
 
   // Format Date: "Oct 24"
   const dateStr = dateObj.toLocaleDateString("en-US", {
+    year: "numeric",
     month: "short",
     day: "numeric",
   });

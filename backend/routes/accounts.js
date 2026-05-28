@@ -29,7 +29,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
 
   // Fetch the accounts within the transaction
   const account = await Account.findOne({ userId: req.userId }).session(
-    session
+    session,
   );
 
   if (!account) {
@@ -58,12 +58,12 @@ router.post("/transfer", authMiddleware, async (req, res) => {
   // Perform the transfer
   await Account.updateOne(
     { userId: req.userId },
-    { $inc: { balance: -amount } }
+    { $inc: { balance: -amount } },
   ).session(session);
 
   await Account.updateOne(
     { userId: to },
-    { $inc: { balance: amount } }
+    { $inc: { balance: amount } },
   ).session(session);
 
   //resolve name from userId
@@ -79,7 +79,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
         type: "debit",
       },
     ],
-    { session }
+    { session },
   );
 
   // Commit the transaction
@@ -175,7 +175,7 @@ router.post("/deposit", authMiddleware, async (req, res) => {
     // $inc increments the balance field by the specified amount
     const result = await Account.updateOne(
       { userId: req.userId },
-      { $inc: { balance: amount } }
+      { $inc: { balance: amount } },
     );
 
     if (result.matchedCount === 0) {
@@ -204,50 +204,103 @@ router.post("/deposit", authMiddleware, async (req, res) => {
 
 module.exports = router;
 
-//-----------------------------------------------------------------
+// Code to see concurrency and Atomicity in action  -----------------------------------------------------------------
+
 // async function transfer(req) {
 //   const session = await mongoose.startSession();
 //   session.startTransaction();
-//   const { amount, to } = req.body;
-//   // Fetch the accounts within the transaction
-//   const account = await Account.findOne({ userId: req.userId }).session(
-//     session
-//   );
-//   if (!account || account.balance < amount) {
+
+//   try {
+//     const { amount, to } = req.body;
+
+//     const account = await Account.findOne({ userId: req.userId }).session(
+//       session,
+//     );
+//     if (!account || account.balance < amount) {
+//       throw new Error("Insufficient balance");
+//     }
+
+//     const toAccount = await Account.findOne({ userId: to }).session(session);
+//     if (!toAccount) {
+//       throw new Error("Invalid account");
+//     }
+
+//     // 1. If another transaction modified this exact user while we were reading,
+//     // MongoDB will throw a WriteConflict error right here.
+//     await Account.updateOne(
+//       { userId: req.userId },
+//       { $inc: { balance: -amount } },
+//     ).session(session);
+
+//     await Account.updateOne(
+//       { userId: to },
+//       { $inc: { balance: amount } },
+//     ).session(session);
+
+//     await session.commitTransaction();
+//     console.log("Transfer Successful!");
+//   } catch (error) {
+//     // 2. We catch the conflict, safely abort, and protect our server from crashing.
 //     await session.abortTransaction();
-//     console.log("Insufficient balance");
-//     return;
+
+//     if (
+//       error.hasErrorLabel &&
+//       error.hasErrorLabel("TransientTransactionError")
+//     ) {
+//       console.log("Concurrency conflict detected! Transaction aborted.");
+//       // Pro-tip: In production, you might want to automatically retry the transaction here!
+//     } else {
+//       console.log("Transfer failed:", error.message);
+//     }
+//   } finally {
+//     session.endSession();
 //   }
-//   const toAccount = await Account.findOne({ userId: to }).session(session);
-//   if (!toAccount) {
-//     await session.abortTransaction();
-//     console.log("Invalid account");
-//     return;
-//   }
-//   // Perform the transfer
-//   await Account.updateOne(
-//     { userId: req.userId },
-//     { $inc: { balance: -amount } }
-//   ).session(session);
-//   await Account.updateOne(
-//     { userId: to },
-//     { $inc: { balance: amount } }
-//   ).session(session); // Commit the transaction
-//   await session.commitTransaction();
-//   console.log("done");
 // }
 
 // transfer({
-//   userId: "65ac44e10ab2ec750ca666a5",
+//   userId: "68176398d50a8d6714e71588",
 //   body: {
-//     to: "65ac44e40ab2ec750ca666aa",
+//     to: "68779bea019b97f12a7868e1",
 //     amount: 100,
 //   },
 // });
 // transfer({
-//   userId: "65ac44e10ab2ec750ca666a5",
+//   userId: "68176398d50a8d6714e71588",
 //   body: {
-//     to: "65ac44e40ab2ec750ca666aa",
+//     to: "68779bea019b97f12a7868e1",
 //     amount: 100,
 //   },
 // });
+
+/* 
+Result  example
+
+Suppose balance = 100
+
+Two simultaneous transfers of 100:
+
+Transaction A
+
+Reads 100
+Deducts 100
+Commits successfully
+
+Final balance: 0
+
+Transaction B
+
+Reads old snapshot (100)
+
+When trying to update:
+
+MongoDB sees document changed already.
+
+Throws : TransientTransactionError
+
+Then this executes:
+
+await session.abortTransaction();
+
+So second transfer fails safely.
+
+*/

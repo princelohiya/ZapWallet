@@ -47,7 +47,7 @@ router.post("/signup", async (req, res) => {
     {
       userId,
     },
-    JWT_SECRET
+    JWT_SECRET,
   );
 
   await Account.create({
@@ -85,7 +85,7 @@ router.post("/signin", async (req, res) => {
       {
         userId: user._id,
       },
-      JWT_SECRET
+      JWT_SECRET,
     );
 
     res.json({

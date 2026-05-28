@@ -6,7 +6,7 @@ const mainRouter = require("./routes/index.js");
 const app = express();
 
 app.get("/", (req, res) => {
-  res.status(200).send("Running...");
+  res.status(200).send("Server is up and running...");
 });
 
 app.use(cors());

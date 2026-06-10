@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { Button } from "../components/Button";
-import { Heading } from "../components/Heading"; // Assuming you have this
-import { InputBox } from "../components/InputBox"; // Assuming you have this
+import { Heading } from "../components/Heading";
+import { InputBox } from "../components/InputBox";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../config/api";
 import { Spinner } from "../components/Loader";
-import { ArrowLeft, Wallet, CreditCard } from "lucide-react"; // Icons for better UI
+import { ArrowLeft, Wallet, CreditCard } from "lucide-react";
 
 export const AddMoney = () => {
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState(null); // To show success/error messages
+  const [message, setMessage] = useState(null);
   const navigate = useNavigate();
 
   const handleAddMoney = async () => {
@@ -24,11 +24,11 @@ export const AddMoney = () => {
     setMessage(null);
 
     try {
-      // Adjust endpoint based on your backend: /account/deposit or /account/add-money
-      const url = `${API_BASE_URL}/account/deposit`;
+      // 1. Hit the new Stripe session endpoint
+      const url = `${API_BASE_URL}/account/create-checkout-session`;
       const token = localStorage.getItem("token");
 
-      await axios.post(
+      const response = await axios.post(
         url,
         { amount: Number(amount) },
         {
@@ -38,21 +38,19 @@ export const AddMoney = () => {
         },
       );
 
-      setMessage({ type: "success", text: "Money added successfully!" });
-
-      // We pass the amount in 'state' so the success page can display it
-      setTimeout(() => {
-        navigate("/payment-success", { state: { amount: Number(amount) } });
-      }, 1000); // 1 second delay to show the success message briefly on this page first
-      // -----------------------
+      // 2. Redirect to the Stripe Hosted Checkout page
+      if (response.data.url) {
+        window.location.href = response.data.url;
+      } else {
+        throw new Error("No checkout URL returned");
+      }
     } catch (error) {
-      console.error("Error adding money:", error);
+      console.error("Error initiating payment:", error);
       setMessage({
         type: "error",
-        text: "Transaction failed. Please try again.",
+        text: "Failed to connect to payment gateway. Please try again.",
       });
-    } finally {
-      setLoading(false);
+      setLoading(false); // Only turn off loading if it fails. If successful, page redirects.
     }
   };
 
@@ -61,7 +59,7 @@ export const AddMoney = () => {
       <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-950 text-purple-400">
         <Spinner />
         <div className="text-xl font-semibold mt-4 text-white">
-          Processing Transaction...
+          Connecting to Secure Gateway...
         </div>
       </div>
     );
@@ -160,15 +158,15 @@ export const AddMoney = () => {
                 </label>
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-black/20 border border-white/5 hover:border-purple-500/20 cursor-pointer transition-colors">
                   <div className="bg-white p-1 rounded">
-                    {/* Placeholder generic bank icon or image */}
                     <CreditCard className="w-5 h-5 text-black" />
                   </div>
                   <div className="flex-1">
                     <div className="text-sm font-medium text-white">
-                      HDFC Bank **** 8892
+                      Stripe Secure Checkout
                     </div>
-
-                    <div className="text-xs text-gray-500">Primary Account</div>
+                    <div className="text-xs text-gray-500">
+                      Cards, UPI, Netbanking
+                    </div>
                   </div>
                   <div className="w-4 h-4 rounded-full border-2 border-purple-500 flex items-center justify-center">
                     <div className="w-2 h-2 rounded-full bg-purple-500"></div>
@@ -177,7 +175,10 @@ export const AddMoney = () => {
               </div>
 
               <div className="pt-4">
-                <Button onClick={handleAddMoney} label={"Proceed to Add"} />
+                <Button
+                  onClick={handleAddMoney}
+                  label={"Proceed to Checkout"}
+                />
               </div>
 
               {/* Message Feedback */}
@@ -196,7 +197,7 @@ export const AddMoney = () => {
           </div>
 
           <p className="text-center text-gray-500 text-xs mt-6">
-            Secure transaction encrypted by ZapWallet Shield™
+            Secure transaction encrypted by Stripe
           </p>
         </div>
       </div>

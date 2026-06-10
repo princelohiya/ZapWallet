@@ -7,7 +7,9 @@ export const PaymentSuccess = () => {
   const location = useLocation();
 
   // Get the amount passed from the previous page (fallback to 0 if accessed directly)
-  const amount = location.state?.amount || 0;
+  //get amount from query params
+  const queryParams = new URLSearchParams(location.search);
+  const amount = queryParams.get("amount") || 0;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-950 text-gray-200 relative overflow-hidden">

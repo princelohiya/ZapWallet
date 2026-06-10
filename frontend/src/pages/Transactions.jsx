@@ -91,7 +91,6 @@ const TransactionItem = ({ transaction }) => {
   const isCredit = transaction.type === "credit";
   const dateObj = new Date(transaction.date);
 
-  // Format Date: "Oct 24"
   const dateStr = dateObj.toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",

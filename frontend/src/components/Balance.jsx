@@ -23,7 +23,7 @@ export const Balance = ({ value }) => {
   return (
     <div className="relative w-full overflow-hidden my-6">
       {/* 1. Background Glow Effects (The "Zap" Feel) */}
-      <div className="absolute top-0 right-0 -mr-8 -mt-8 w-64 h-64 bg-purple-600 rounded-full blur-3xl opacity-20 animate-pulse"></div>
+      <div className="absolute top-0 right-0 -mr-1 -mt-8 w-64 h-64 bg-purple-600 rounded-full blur-3xl opacity-20 animate-pulse"></div>
       <div className="absolute bottom-0 left-0 -ml-8 -mb-8 w-64 h-64 bg-blue-600 rounded-full blur-3xl opacity-20 animate-pulse"></div>
 
       {/* 2. The Glass Card */}

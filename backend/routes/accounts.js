@@ -1,13 +1,18 @@
+require("dotenv").config(); // 1. Load env variables FIRST
+
 const express = require("express");
 const { authMiddleware } = require("../middleware");
 const { Account, Transaction, User } = require("../db");
 const { default: mongoose } = require("mongoose");
 const zod = require("zod");
+const Stripe = require("stripe");
 
 const router = express.Router();
 
-// /balance end point
+// Initialize Stripe using your secret key from environment variables
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+// /balance end point
 router.get("/balance", authMiddleware, async (req, res) => {
   const account = await Account.findOne({
     userId: req.userId,
@@ -19,7 +24,6 @@ router.get("/balance", authMiddleware, async (req, res) => {
 });
 
 // /transfer end point
-
 router.post("/transfer", authMiddleware, async (req, res) => {
   const session = await mongoose.startSession();
 
@@ -151,17 +155,12 @@ const depositBody = zod.object({
   amount: zod.number().positive().min(1, "Amount must be at least ₹1"),
 });
 
-// ROUTE: POST /account/deposit
-router.post("/deposit", authMiddleware, async (req, res) => {
-  const session = await mongoose.startSession();
-
-  session.startTransaction();
-
-  // 1. Validate Input
+// ROUTE: POST /account/create-checkout-session (REPLACES /deposit)
+router.post("/create-checkout-session", authMiddleware, async (req, res) => {
+  // 1. Validate Input using your existing Zod schema
   const { success, data, error } = depositBody.safeParse(req.body);
 
   if (!success) {
-    await session.abortTransaction();
     return res.status(400).json({
       message: "Invalid amount",
       error: error.errors,
@@ -171,35 +170,41 @@ router.post("/deposit", authMiddleware, async (req, res) => {
   const amount = data.amount;
 
   try {
-    // 2. Perform the Atomic Update
-    // $inc increments the balance field by the specified amount
-    const result = await Account.updateOne(
-      { userId: req.userId },
-      { $inc: { balance: amount } },
-    );
-
-    if (result.matchedCount === 0) {
-      await session.abortTransaction();
-      // Should verify if user actually has an account initialized
-      return res.status(404).json({
-        message: "Account not found",
-      });
-    }
-
-    // 3. Return Success
-    res.status(200).json({
-      message: "Amount added successfully",
-      addedAmount: amount,
+    // 2. Create the Stripe Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "inr", // Specify Indian Rupees
+            product_data: {
+              name: "ZapWallet Top-up",
+              description: "Add funds to your digital wallet",
+            },
+            // Stripe requires amounts in the smallest currency unit (paise)
+            unit_amount: amount * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      // Attach the userId so we know who to credit when the payment succeeds
+      metadata: {
+        userId: req.userId.toString(),
+      },
+      // Make sure FRONTEND_URL is set in your .env (e.g., http://localhost:5173 or Vercel URL)
+      success_url: `${process.env.FRONTEND_URL}/payment-success?amount=${amount}`,
+      cancel_url: `${process.env.FRONTEND_URL}/dashboard`,
     });
+
+    // 3. Return the Stripe URL to the frontend
+    res.status(200).json({ url: session.url });
   } catch (err) {
-    await session.abortTransaction();
-    console.error("Deposit Error:", err);
+    console.error("Stripe Session Error:", err);
     res.status(500).json({
-      message: "Internal server error while depositing money",
+      message: "Could not create payment session",
     });
   }
-  // Commit the transaction
-  await session.commitTransaction();
 });
 
 module.exports = router;
